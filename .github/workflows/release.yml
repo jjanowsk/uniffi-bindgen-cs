@@ -1,0 +1,27 @@
+name: Release and upload artifacts
+
+on:
+  push:
+    tags:
+    - '*'
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    container:
+      image: rust:1.64
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: 'true'
+    - name: Build
+      run: ./build.sh
+    - uses: ncipollo/release-action@v1
+      with:
+        artifacts: 'target/debug/uniffi-bindgen-cs'
+        omitBody: 'true'
